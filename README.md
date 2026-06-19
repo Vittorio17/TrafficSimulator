@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="immagini/logo.svg" alt="FluxEngine Logo" width="32" height="32" style="vertical-align: middle;"> FluxEngine
+  <img src="img/icon-svg.svg" alt="FluxEngine Logo" width="32" height="32" style="vertical-align: middle;"> FluxEngine
 </h1>
 <h4 align="center">Large-Scale Urban Mobility Engine</h4>
 
@@ -80,4 +80,114 @@ Below are the results of the **Physical Breaking Point Stress Test** conducted o
 *The engine successfully routed and simulated **2,000,000 concurrent agents**, maintaining a highly stable throughput of over 260,000 spatial updates per second. The failure at 2.5 million agents represents the Operating System's physical inability to allocate a single, unfragmented contiguous memory block (exceeding ~9.3 GiB) required for the massive NumPy matrices. This confirms that the engine's execution time remains perfectly linear and proportional to the dataset size right up to the absolute hardware ceiling.*
 
 **[Explore the detailed Performance Benchmarks & Stress Tests →](docs/Performance.md)**
+
+Hai perfettamente ragione. Nei progetti infrastrutturali complessi, dare per scontati i passaggi è l'errore più comune. Una documentazione iper-dettagliata riduce a zero la frustrazione di chi clona il repository e previene l'apertura di *Issue* inutili su GitHub.
+
+Visto che abbiamo pacchettizzato tutto alla perfezione (incluso il Container Registry), possiamo creare una guida "a prova di bomba" che spieghi non solo *cosa* digitare, ma anche *perché* farlo e *cosa aspettarsi*.
+
+Ecco una versione estesa, granulare e professionale per il tuo `README.md`. Puoi sostituire il blocco precedente con questo:
+
+
+## Quick Start & Usage Guide
+
+The **FluxEngine** architecture is strictly decoupled. It consists of a high-performance **Backend Engine** (handling DOD memory allocation, routing, and simulation logic) and a lightweight, static **Frontend Client** (for visual rendering).
+
+To run the simulation, you must first start the backend server, and then open the client interface.
+
+### Step 1: Start the Backend Engine
+
+Choose one of the following methods depending on your needs.
+
+#### Method A: The 1-Click Container (Easiest for Users)
+If you simply want to test the simulation without downloading the source code or installing Python, you can pull the pre-built image directly from the GitHub Container Registry.
+Requires [Docker](https://www.docker.com/).
+
+1. Open your terminal and run:
+```bash
+docker run -d -p 8000:8000 ghcr.io/vittorio17/trafficsimulator:latest
+
+```
+
+2. The engine is now running silently in the background on port 8000. *(Skip to Step 2)*.
+
+#### Method B: Local Docker Build (For testing modifications)
+
+If you cloned the repository and want to run the isolated environment with hot-reloading enabled.
+
+1. Clone the repository and navigate into it:
+```bash
+git clone [https://github.com/vittorio17/TrafficSimulator.git](https://github.com/vittorio17/TrafficSimulator.git)
+cd TrafficSimulator
+
+```
+
+
+2. Build and spin up the container:
+```bash
+docker-compose up -d --build
+
+```
+
+
+*Note: The `-d` flag runs the server in detached mode. To view the engine logs in real-time, use `docker-compose logs -f`.*
+
+#### Method C: Native Execution (For Core Developers)
+
+If you want to actively develop the DOD engine or the API. This method requires the ultra-fast [uv](https://github.com/astral-sh/uv) package manager.
+
+1. Clone the repository:
+```bash
+git clone [https://github.com/vittorio17/TrafficSimulator.git](https://github.com/vittorio17/TrafficSimulator.git)
+cd TrafficSimulator
+
+```
+
+
+2. Sync the environment (this instantly installs all exact dependencies from `uv.lock`, including NumPy and SciPy):
+```bash
+uv sync
+
+```
+
+
+3. Boot the FastAPI server:
+```bash
+uv run uvicorn main:app --host 0.0.0.0 --port 8000
+
+```
+
+
+
+---
+
+### Step 2: Verify the Engine & API Docs
+
+Regardless of the method chosen, the FastAPI backend will automatically generate interactive documentation based on the OpenAPI standard.
+
+Open your browser and navigate to:
+👉 **[http://localhost:8000/docs](https://www.google.com/search?q=http://localhost:8000/docs)**
+
+Here you can directly test the endpoints (`/build`, `/populate`, `/step`) and inspect the Pydantic data schemas without needing external tools like Postman.
+
+---
+
+### Step 3: Launch the Visual Interface (Frontend)
+
+The client-side application is entirely static (Vanilla HTML/JS) and requires no Node.js environment, build tools, or web servers.
+
+1. Locate the **`sim-ui.html`** file in the root of the project folder.
+2. Double-click the file to open it in any modern web browser (Chrome/Edge/Firefox).
+3. **Using the Dashboard:**
+* Enter the geographical coordinates (Latitude/Longitude) of your desired city.
+* Click **"Build World"**. The UI will send the coordinates to the backend, which will download the OpenStreetMap data, process the Dijkstra graph, and return the walkable network.
+* Enter your desired **Agent Count** (e.g., 50,000).
+* Click **"Populate"** to trigger the parallel multiprocessing initialization.
+* Click **"Start"** to begin the real-time DOD simulation!
+
+
+
+### ⚠️ Troubleshooting
+
+* **Port 8000 already in use:** If the engine fails to start, ensure no other local servers or applications are using port 8000.
+* **Map Building Fails / Timeout:** Downloading large cities from OpenStreetMap via the OSMnx library can occasionally hit API limits or take several minutes. If it fails, try a smaller radius or standard coordinates first.
 
