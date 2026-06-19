@@ -1,0 +1,14 @@
+[project]
+name = "trafficsimulator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.137.2",
+    "networkx>=3.6.1",
+    "numpy>=2.4.6",
+    "osmnx>=2.1.0",
+    "scipy>=1.17.1",
+    "uvicorn>=0.49.0",
+]

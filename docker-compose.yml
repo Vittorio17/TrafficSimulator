@@ -1,0 +1,12 @@
+services:
+  fluxengine:
+    build: .
+    container_name: fluxengine-core
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /app/.venv   
+      - ./cache:/app/cache
+    environment:
+      - PYTHONUNBUFFERED=1
